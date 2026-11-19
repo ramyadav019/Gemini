@@ -2,7 +2,7 @@ __pycache__/
 *.pyc
 cookie.txt
 cookie.json
-.env
+.venv
 .idea
 .DS_Store
 gemini-auth.json
