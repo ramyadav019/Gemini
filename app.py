@@ -42,12 +42,6 @@ def R(path, **kw):
     return dec
 
 
-@app.route(PFX, methods=["GET", "POST", "OPTIONS"])
-@app.route(PFX + "/", methods=["GET", "POST", "OPTIONS"])
-@app.route(PFX + "/<path:p>", methods=["GET", "POST", "OPTIONS"])
-def vercel_root(p=None):
-    return {"debug_path": request.path, "method": request.method}
-
 
 def _authorized():
     keys = CONFIG.get("api_keys") or []
