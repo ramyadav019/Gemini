@@ -4,7 +4,10 @@ import json
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+# Ensure repo root is on the path so gemini_web2api package is importable
+_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _root not in sys.path:
+    sys.path.insert(0, _root)
 
 from flask import Flask, request, Response, stream_with_context
 from gemini_web2api.config import CONFIG, load_config
