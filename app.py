@@ -28,6 +28,7 @@ if api_keys_env:
     CONFIG["api_keys"] = [k.strip() for k in api_keys_env.split(",") if k.strip()]
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 
 R = app.route
 
@@ -51,10 +52,9 @@ def _unauth():
     return Response(json.dumps({"error": {"message": "invalid api key"}}), 401, content_type="application/json")
 
 
-@app.route("/", defaults={"path": ""}, methods=["GET","POST","OPTIONS"])
-@app.route("/<path:path>", methods=["GET","POST","OPTIONS"])
-def catch_all(path=""):
-    return {"debug_path": request.path, "method": request.method}
+@app.route("/")
+def index():
+    return {"status": "ok", "version": __version__, "models": list(MODELS.keys())}
 
 
 @R("/v1/models")
