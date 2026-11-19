@@ -64,7 +64,10 @@ def _unauth():
 
 
 @app.route("/")
-def index():
+@app.route("/<path:path>")
+def index(path=None):
+    if path:
+        return {"error": "not found"}, 404
     return {"status": "ok", "version": __version__, "models": list(MODELS.keys())}
 
 
