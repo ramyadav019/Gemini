@@ -1,8 +1,24 @@
+# Python
 __pycache__/
 *.pyc
+*.pyo
+.venv/
+venv/
+
+# Secrets & auth
 cookie.txt
 cookie.json
-.venv
-.idea
-.DS_Store
 gemini-auth.json
+config.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
