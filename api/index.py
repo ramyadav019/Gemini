@@ -64,8 +64,9 @@ def _unauth():
 
 
 @app.route("/")
-def index():
-    return {"status": "ok", "version": __version__, "models": list(MODELS.keys())}
+@app.route("/<path:path>")
+def index(path=""):
+    return {"status": "ok", "version": __version__, "models": list(MODELS.keys()), "debug_path": request.path}
 
 
 @app.route("/v1/models")
