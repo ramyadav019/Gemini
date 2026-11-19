@@ -4,5 +4,5 @@
       "maxDuration": 60
     }
   },
-  "rewrites": [{ "source": "/(.*)", "destination": "/app.py" }]
+  "rewrites": [{ "source": "/:path*", "destination": "/app.py/:path*" }]
 }
