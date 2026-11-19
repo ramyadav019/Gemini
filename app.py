@@ -51,9 +51,10 @@ def _unauth():
     return Response(json.dumps({"error": {"message": "invalid api key"}}), 401, content_type="application/json")
 
 
-@app.route("/")
-def index():
-    return {"status": "ok", "version": __version__, "models": list(MODELS.keys())}
+@app.route("/", defaults={"path": ""}, methods=["GET","POST","OPTIONS"])
+@app.route("/<path:path>", methods=["GET","POST","OPTIONS"])
+def catch_all(path=""):
+    return {"debug_path": request.path, "method": request.method}
 
 
 @R("/v1/models")
