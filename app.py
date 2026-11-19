@@ -30,7 +30,16 @@ if api_keys_env:
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-R = app.route
+# Vercel sends /app.py as prefix — register routes under both
+PFX = "/app.py"
+
+
+def R(path, **kw):
+    def dec(f):
+        app.route(PFX + path, **kw)(f)
+        app.route(path, **kw)(f)
+        return f
+    return dec
 
 
 def _authorized():
@@ -52,10 +61,9 @@ def _unauth():
     return Response(json.dumps({"error": {"message": "invalid api key"}}), 401, content_type="application/json")
 
 
-@app.route("/", defaults={"path": ""}, methods=["GET","POST","OPTIONS"])
-@app.route("/<path:path>", methods=["GET","POST","OPTIONS"])
-def catch_all(path=""):
-    return {"debug_path": request.path, "method": request.method}
+@R("/")
+def index():
+    return {"status": "ok", "version": __version__, "models": list(MODELS.keys())}
 
 
 @R("/v1/models")
@@ -189,10 +197,9 @@ def google_generate(model_path):
     else:
         response_parts.append({"text": text or "I apologize, but I was unable to generate a response. Please try again."})
 
-    response_obj = {
+    return {
         "candidates": [{"content": {"parts": response_parts, "role": "model"}, "finishReason": "STOP", "index": 0}],
         "usageMetadata": {"promptTokenCount": len(prompt)//4, "candidatesTokenCount": len(text or "")//4,
                           "totalTokenCount": (len(prompt)+len(text or ""))//4},
         "modelVersion": model_name,
     }
-    return response_obj
