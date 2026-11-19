@@ -51,18 +51,8 @@ def _unauth():
     return Response(json.dumps({"error": {"message": "invalid api key"}}), 401, content_type="application/json")
 
 
-@app.route("/", defaults={"path": ""}, methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"])
-@app.route("/<path:path>", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"])
-def catch_all(path=""):
-    # Strip any prefix Vercel adds (e.g. /app, /api/index)
-    real_path = "/" + path
-    adapter = app.url_map.bind("")
-    try:
-        endpoint, kwargs = adapter.match(real_path, method=request.method)
-        if endpoint != "catch_all":
-            return app.view_functions[endpoint](**kwargs)
-    except Exception:
-        pass
+@app.route("/")
+def index():
     return {"status": "ok", "version": __version__, "models": list(MODELS.keys())}
 
 
